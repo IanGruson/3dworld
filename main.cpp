@@ -7,7 +7,7 @@
 #include <GL/glut.h>
 #include <glm/glm.hpp>
 #include <math.h>
-#include "landscape.h"
+#include "Renderer.h"
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 1024
 
@@ -25,8 +25,7 @@ int main(int argc, char *argv[])
         /* Création de la fenêtre */
 
 
-		/* SDL_GL_SwapWindow(pWindow); */
-			/* SDL_GL_DeleteContext(glcontext); */
+		SDL_Window* pWindow = setup_SDL();
 		if( pWindow )
 		{
 			/* SDL_PumpEvents(); //Not needed as it is implicitly called. */
@@ -34,7 +33,6 @@ int main(int argc, char *argv[])
 			while(cont!=0)
 			{
 				/* std::cout << "HELLO" << std::endl; */
-				generateTerrain(pWindow);
 				SDL_Event event;
 				if(SDL_PollEvent(&event))
 				{

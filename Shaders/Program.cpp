@@ -33,8 +33,8 @@ void Program::shaderProgram(unsigned int shaderProgram, unsigned int vertexShade
 	// Deletes shader after link as there is no use for them anymore. 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
-
 }
+
 /**
 	Checks for GLSL program compilation errors.
 	@param shader the shader to compile.

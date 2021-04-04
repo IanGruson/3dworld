@@ -10,7 +10,7 @@ class Program
 	public : 
 		Program();
 		void compileShader(unsigned int shader, const char* shaderSource, GLenum shaderType);
-		void shaderProgram(unsigned int vertexShader, unsigned int fragmentShader);
+		void shaderProgram(unsigned int shaderProgram, unsigned int vertexShader, unsigned int fragmentShader);
 		void checkCompileErrors(GLuint shader, GLenum shaderType);
 		const char *vertexShaderSource = "#version 460 core\n"
 			"layout (location = 0) in vec3 aPos;\n"

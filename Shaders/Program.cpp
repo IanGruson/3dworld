@@ -23,9 +23,8 @@ void Program::compileShader(unsigned int shader, const char* shaderSource, GLenu
   @param vertexShader the vertex shader to attach
   @param fragmentShader the fragment shader to attach
 **/
-void Program::shaderProgram(unsigned int vertexShader, unsigned int fragmentShader)
+void Program::shaderProgram(unsigned int shaderProgram, unsigned int vertexShader, unsigned int fragmentShader)
 {
-	unsigned int shaderProgram;
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);

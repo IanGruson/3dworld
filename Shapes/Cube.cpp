@@ -61,10 +61,13 @@ Cube::Cube()
 	
 }
 
-void Cube::render(Program *program)
+void Cube::render(Program *prog)
 {
+	prog->compileShader(prog->vertexShader, prog->vertexShaderSource, GL_VERTEX_SHADER);
+	prog->compileShader(prog->fragmentShader, prog->vertexShaderSource, GL_FRAGMENT_SHADER);
+	prog->createShaderProgram(prog->shaderProgram,prog->vertexShader, prog->fragmentShader);
+	glUseProgram(prog->shaderProgram);
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glBindVertexArray(0);
 
 }

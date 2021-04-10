@@ -8,6 +8,7 @@
 #include <glm/glm.hpp>
 #include <math.h>
 #include "Renderer.h"
+#include "Shapes/Cube.h"
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 1024
 
@@ -51,6 +52,12 @@ int main(int argc, char *argv[])
 					}
 				}
 
+				glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+				glClear(GL_COLOR_BUFFER_BIT);
+				Program *prog = new Program();
+				Cube *cube = new Cube();
+				/* cube->render(prog); */
+				
 			}
 
 		}

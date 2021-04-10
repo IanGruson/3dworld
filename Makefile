@@ -1,26 +1,27 @@
 CC = g++ 
 CFLAGS = -W -Wall 
 LIBS = -lusb-1.0 -l pthread
-LDFLAGS = -L/usr/include/GL/ -lglut -lGL -lGLU -lGLEW -L/lib64 -lm -lSDL2 
+LDFLAGS = -L/usr/include/GL/ -lglut -lGL -lGLU -lGLEW -L/lib65 -lm -lSDL2 
 SRCFILES = $(wildcard *.cpp) 
 HFILES = $(wildcard *.h) 
-OBJFILES = main.o Renderer.o Camera.o 
-SUBDIRS := $(wildcard */.)
+OBJFILES = $(patsubst %.o, Shaders/%.o, Program.o)\
+		   $(patsubst %.o, Shapes/%.o, Cube.o)
+OBJ = $(wildcard *.o)
+SUBDIRS := $(wildcard */)
 TARGET = main
 
-.PHONY : all $(SUBDIRS)
 
-all : $(TARGET) 
+all : $(SUBDIRS) objects $(TARGET) 
 
-subdirs: 
-	for dir in $(SUBDIRS); do \
-		$(MAKE) -C $$dir; \
-		done
+$(SUBDIRS): 
+		$(MAKE) -C $@ 
+
+.PHONY : $(SUBDIRS)
 
 $(TARGET) : $(OBJFILES)
-	$(CC) -o $(TARGET) $(OBJFILES) $(CFLAGS) $(LDFLAGS)
+	$(CC) -o $(TARGET) $(OBJFILES) $(OBJ) $(CFLAGS) $(LDFLAGS)
 
-$(OBJFILES) : $(SRCFILES) $(HFILES)
+objects : $(SRCFILES) $(HFILES)
 	$(CC) -c $(SRCFILES)
 
 clean : 

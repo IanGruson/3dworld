@@ -74,6 +74,5 @@ void Program::checkCompileErrors(GLuint shader, GLenum shaderType)
 			std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 		}
 	}
-	print("hello");
 
 }

@@ -1,6 +1,6 @@
 #include "Cube.h"
 
-Cube::Cube()
+Cube::Cube(GLuint VAO, GLuint VBO)
 {
 	float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -61,7 +61,7 @@ Cube::Cube()
 	
 }
 
-void Cube::render(Program *prog)
+void Cube::render(Program *prog, GLuint VAO)
 {
 	prog->compileShader(prog->vertexShader, prog->vertexShaderSource, GL_VERTEX_SHADER);
 	prog->compileShader(prog->fragmentShader, prog->vertexShaderSource, GL_FRAGMENT_SHADER);

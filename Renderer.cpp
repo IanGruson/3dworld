@@ -15,7 +15,8 @@ SDL_Window* setup_SDL()
                                                                   SDL_WINDOWPOS_CENTERED,
                                                                   1280,
                                                                   1024,
-                                                                  SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_INPUT_FOCUS);
+                                                                  SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_OPENGL | SDL_WINDOW_INPUT_FOCUS);
+
 		return pWindow;
 }
 

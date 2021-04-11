@@ -25,8 +25,13 @@ int main(int argc, char *argv[])
     {
         /* Création de la fenêtre */
 
+		glewExperimental = GL_TRUE;
+		glewInit();
 
 		SDL_Window* pWindow = setup_SDL();
+		SDL_GLContext glcontext = SDL_GL_CreateContext(pWindow);
+		glewExperimental = GL_TRUE;
+		glewInit();
 		if( pWindow )
 		{
 			/* SDL_PumpEvents(); //Not needed as it is implicitly called. */
@@ -51,12 +56,14 @@ int main(int argc, char *argv[])
 							fprintf(stdout, "Événement non traité : %d\n",event.type);
 					}
 				}
+				GLuint VAO, VBO;
 
 				glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 				glClear(GL_COLOR_BUFFER_BIT);
 				Program *prog = new Program();
-				Cube *cube = new Cube();
-				/* cube->render(prog); */
+				Cube *cube = new Cube(VAO, VBO);
+				cube->render(prog, VAO);
+				SDL_GL_SwapWindow(pWindow);
 				
 			}
 

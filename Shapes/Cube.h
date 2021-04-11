@@ -12,9 +12,6 @@
 class Cube
 {
 	public :
-		Cube();
-		unsigned int VBO, VAO;
-		void render(Program *program);
-		float vertices[]; 
-	private :
+		Cube(GLuint VAO, GLuint VBO);
+		void render(Program *program, GLuint VAO);
 };

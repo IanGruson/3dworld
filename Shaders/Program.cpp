@@ -9,7 +9,7 @@ Program::Program()
 	the shader.
 	@param shaderSource the sourcecode of the shader to create/compile.
  **/
-void Program::compileShader(unsigned int shader, const char* shaderSource, GLenum shaderType)
+void Program::compileShader(GLuint shader, const char* shaderSource, GLenum shaderType)
 {
 	shader = glCreateShader(shaderType);
 	glShaderSource(shader, 1, &shaderSource, NULL);
@@ -17,6 +17,19 @@ void Program::compileShader(unsigned int shader, const char* shaderSource, GLenu
 	this->checkCompileErrors(shader, shaderType);
 }
 
+/**
+	Create a shaderProgram. This method is only used for the camera for now. 
+	@param cameraShader the camera shader program.
+ **/
+void Program::createShaderProgram(GLuint shaderProgram, GLuint cameraShader)
+{
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, cameraShader);
+	glLinkProgram(shaderProgram);
+	
+	// Deletes shader after link as there is no use for them anymore. 
+	glDeleteShader(cameraShader);
+}
 
 /**
   Creates the shader program, and attaches a vertex and a fragment shader. 
@@ -74,5 +87,12 @@ void Program::checkCompileErrors(GLuint shader, GLenum shaderType)
 			std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 		}
 	}
+
+}
+
+void Program::setMat4(const std::string &name, const glm::mat4 &mat) 
+{
+	GLuint ID;
+	glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 
 }

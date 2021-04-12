@@ -25,15 +25,23 @@ int main(int argc, char *argv[])
     {
         /* Création de la fenêtre */
 
-		glewExperimental = GL_TRUE;
-		glewInit();
-
+		Camera *cam = new Camera();
 		SDL_Window* pWindow = setup_SDL();
 		SDL_GLContext glcontext = SDL_GL_CreateContext(pWindow);
 		glewExperimental = GL_TRUE;
 		glewInit();
 		if( pWindow )
 		{
+			GLuint cameraShader; 
+			GLuint cameraProg;
+			Program *prog = new Program();
+			Camera *cam = new Camera();
+			prog->compileShader(cam->cameraShader, prog->cameraShaderSource, GL_SHADER);
+			prog->createShaderProgram(cameraProg, cam->cameraShader);
+			glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+			view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			prog->setMat4("view", view);
+			
 			/* SDL_PumpEvents(); //Not needed as it is implicitly called. */
 			char cont = 1;
 			while(cont!=0)
@@ -55,12 +63,12 @@ int main(int argc, char *argv[])
 						default:
 							fprintf(stdout, "Événement non traité : %d\n",event.type);
 					}
+					cam->processInput(event);
 				}
 				GLuint VAO, VBO;
 
 				glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 				glClear(GL_COLOR_BUFFER_BIT);
-				Program *prog = new Program();
 				Cube *cube = new Cube(VAO, VBO);
 				cube->render(prog, VAO);
 				SDL_GL_SwapWindow(pWindow);

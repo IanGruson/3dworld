@@ -1,11 +1,14 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <SDL2/SDL.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
 
 class Camera  
 {
 	public :
 		Camera();
+		GLuint cameraShader;
 		void processInput(SDL_Event event);
 	private :
 		glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);

@@ -11,7 +11,7 @@ Renderer::Renderer(unsigned int VBO, Camera *camera, unsigned int screenWidth, u
 SDL_Window* setup_SDL()
 {
         SDL_Window* pWindow = NULL;
-        pWindow = SDL_CreateWindow("Ma première application SDL2",SDL_WINDOWPOS_CENTERED,
+        pWindow = SDL_CreateWindow("3D Engine",SDL_WINDOWPOS_CENTERED,
                                                                   SDL_WINDOWPOS_CENTERED,
                                                                   1280,
                                                                   1024,

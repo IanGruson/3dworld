@@ -1,5 +1,12 @@
 #include "Camera.h"
 
+Camera::Camera()
+{
+}
+/**
+	Process the input of the user to move the camera using SDL events.
+	@param event the SDL event used in main program loop.
+**/
 void Camera::processInput(SDL_Event event)
 {
 	const float cameraSpeed = 0.5f;

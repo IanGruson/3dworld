@@ -6,6 +6,8 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <math.h>
 #include "Renderer.h"
 #include "Shapes/Cube.h"
@@ -32,16 +34,20 @@ int main(int argc, char *argv[])
 		glewInit();
 		if( pWindow )
 		{
-			GLuint cameraShader; 
-			GLuint cameraProg;
 			Program *prog = new Program();
 			Camera *cam = new Camera();
-			prog->compileShader(cam->cameraShader, prog->cameraShaderSource, GL_SHADER);
-			prog->createShaderProgram(cameraProg, cam->cameraShader);
+			prog->compileShader(prog->vertexShader, prog->vertexShaderSource, GL_SHADER);
+			prog->createShaderProgram(prog->vertexShader, prog->vertexShader);
+			glm::mat4 projection = glm::mat4(1.0f);
+			projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH/(float)SCREEN_HEIGHT, 0.1f, 100.0f);
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
 			glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-			view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			prog->setMat4("view", view);
 			
+			GLuint VAO, VBO;
+			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			Cube *cube = new Cube(VAO, VBO);
 			/* SDL_PumpEvents(); //Not needed as it is implicitly called. */
 			char cont = 1;
 			while(cont!=0)
@@ -60,18 +66,19 @@ int main(int argc, char *argv[])
 								cont = 0;
 							}
 							break;
-						default:
-							fprintf(stdout, "Événement non traité : %d\n",event.type);
+						/* default: */
+						/* 	fprintf(stdout, "Événement non traité : %d\n",event.type); */
 					}
 					cam->processInput(event);
-				}
-				GLuint VAO, VBO;
+					view = glm::lookAt(cam->cameraPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+					std::cout << glm::to_string(cam->cameraPos) << std::endl;
+					prog->setMat4("projection", projection);
+					prog->setMat4("view", view);
+					prog->setMat4("model", model);
 
-				glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT);
-				Cube *cube = new Cube(VAO, VBO);
-				cube->render(prog, VAO);
-				SDL_GL_SwapWindow(pWindow);
+					cube->render(prog, VAO);
+					SDL_GL_SwapWindow(pWindow);
+				}
 				
 			}
 

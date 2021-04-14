@@ -94,5 +94,4 @@ void Program::setMat4(const std::string &name, const glm::mat4 &mat)
 {
 	GLuint ID;
 	glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
-
 }

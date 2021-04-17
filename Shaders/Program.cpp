@@ -19,16 +19,16 @@ void Program::compileShader(GLuint shader, const char* shaderSource, GLenum shad
 
 /**
 	Create a shaderProgram. This method is only used for the camera for now. 
-	@param cameraShader the camera shader program.
+	@param shader the camera shader program.
  **/
-void Program::createShaderProgram(GLuint shaderProgram, GLuint cameraShader)
+void Program::createShaderProgram(GLuint shaderProgram, GLuint shader)
 {
 	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, cameraShader);
+	glAttachShader(shaderProgram, shader);
 	glLinkProgram(shaderProgram);
 	
 	// Deletes shader after link as there is no use for them anymore. 
-	glDeleteShader(cameraShader);
+	glDeleteShader(shader);
 }
 
 /**
@@ -90,8 +90,8 @@ void Program::checkCompileErrors(GLuint shader, GLenum shaderType)
 
 }
 
-void Program::setMat4(const std::string &name, const glm::mat4 &mat) 
+void Program::setMat4(GLuint shader, const std::string &name, const glm::mat4 &mat) 
 {
 	GLuint ID;
-	glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+	glUniformMatrix2fv(glGetUniformLocation(shader, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }

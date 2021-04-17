@@ -17,15 +17,15 @@
 
 int main(int argc, char *argv[])
 {
-    /* Initialisation simple */
-    if (SDL_Init(SDL_INIT_VIDEO) != 0 )
-    {
-        fprintf(stdout,"Failed initializing SDL (%s)\n",SDL_GetError());
-        return -1;
-    }
+	/* Initialisation simple */
+	if (SDL_Init(SDL_INIT_VIDEO) != 0 )
+	{
+		fprintf(stdout,"Failed initializing SDL (%s)\n",SDL_GetError());
+		return -1;
+	}
 
-    {
-        /* Création de la fenêtre */
+	{
+		/* Création de la fenêtre */
 
 		Camera *cam = new Camera();
 		SDL_Window* pWindow = setup_SDL();
@@ -34,21 +34,28 @@ int main(int argc, char *argv[])
 		glewInit();
 		if( pWindow )
 		{
+			/* Creating our shader program. */
 			Program *prog = new Program();
-			Camera *cam = new Camera();
 			prog->compileShader(prog->vertexShader, prog->vertexShaderSource, GL_SHADER);
-			prog->createShaderProgram(prog->vertexShader, prog->vertexShader);
+			prog->compileShader(prog->fragmentShader, prog->vertexShaderSource, GL_FRAGMENT_SHADER);
+			prog->createShaderProgram(prog->shaderProgram,prog->vertexShader, prog->fragmentShader);
+
+			/* Initializing view, model and projection matrices. */ 
 			glm::mat4 projection = glm::mat4(1.0f);
 			projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH/(float)SCREEN_HEIGHT, 0.1f, 100.0f);
+
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
+
 			glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-			
+
+			Camera *cam = new Camera();
+
 			GLuint VAO, VBO;
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
+
 			Cube *cube = new Cube(VAO, VBO);
-			/* SDL_PumpEvents(); //Not needed as it is implicitly called. */
+
+			/* This is the main rendering loop. */
 			char cont = 1;
 			while(cont!=0)
 			{
@@ -66,20 +73,28 @@ int main(int argc, char *argv[])
 								cont = 0;
 							}
 							break;
-						/* default: */
-						/* 	fprintf(stdout, "Événement non traité : %d\n",event.type); */
+							/* default: */
+							/* 	fprintf(stdout, "Événement non traité : %d\n",event.type); */
 					}
+
+					/* This moves the camera by changing the view uniform vec in */ 
+					/* 	our vertex shader. */
 					cam->processInput(event);
 					view = glm::lookAt(cam->cameraPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 					std::cout << glm::to_string(cam->cameraPos) << std::endl;
-					prog->setMat4("projection", projection);
-					prog->setMat4("view", view);
-					prog->setMat4("model", model);
-
 					cube->render(prog, VAO);
+					prog->setMat4(prog->shaderProgram, "projection", projection);
+					prog->setMat4(prog->shaderProgram, "view", view);
+					prog->setMat4(prog->shaderProgram, "model", model);
+
+					GLint viewLocation = glGetUniformLocation(prog->shaderProgram, "view");
+					std::cout << "view location returns : " << viewLocation << std::endl;
+
+					glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+					/* glClear(GL_COLOR_BUFFER_BIT); */
 					SDL_GL_SwapWindow(pWindow);
 				}
-				
+
 			}
 
 		}

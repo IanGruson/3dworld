@@ -15,10 +15,10 @@ class Program
 		GLuint vertexShader;
 		GLuint shaderProgram;
 		void compileShader(GLuint shader, const char* shaderSource, GLenum shaderType);
-		void createShaderProgram(GLuint shaderProgram, GLuint cameraShader);
+		void createShaderProgram(GLuint shaderProgram, GLuint shader);
 		void createShaderProgram(GLuint shaderProgram, GLuint vertexShader, GLuint fragmentShader);
 		void checkCompileErrors(GLuint shader, GLenum shaderType);
-		void setMat4(const std::string &name, const glm::mat4 &mat);
+		void setMat4(GLuint shader, const std::string &name, const glm::mat4 &mat);
 		const char *vertexShaderSource = "#version 460 core\n"
 			"layout (location = 0) in vec3 aPos;\n"
 			"layout (location = 1) in vec2 aTexCoord;\n"

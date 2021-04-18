@@ -13,5 +13,5 @@ class Cube
 {
 	public :
 		Cube(GLuint VAO, GLuint VBO);
-		void render(Program *program, GLuint VAO);
+		void render(GLuint prog, GLuint VAO);
 };

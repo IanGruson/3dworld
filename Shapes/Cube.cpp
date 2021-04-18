@@ -61,9 +61,9 @@ Cube::Cube(GLuint VAO, GLuint VBO)
 	
 }
 
-void Cube::render(Program *prog, GLuint VAO)
+void Cube::render(GLuint prog, GLuint VAO)
 {
-	glUseProgram(prog->shaderProgram);
+	glUseProgram(prog);
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 

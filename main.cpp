@@ -26,7 +26,6 @@ int main(int argc, char *argv[])
 
 	{
 		/* Création de la fenêtre */
-
 		Camera *cam = new Camera();
 		SDL_Window* pWindow = setup_SDL();
 		SDL_GLContext glcontext = SDL_GL_CreateContext(pWindow);
@@ -38,7 +37,7 @@ int main(int argc, char *argv[])
 			Program *prog = new Program();
 			GLuint shaderProgram;
 			prog->compileShader(prog->vertexShader, prog->vertexShaderSource, GL_SHADER);
-			prog->compileShader(prog->fragmentShader, prog->vertexShaderSource, GL_FRAGMENT_SHADER);
+			prog->compileShader(prog->fragmentShader, prog->fragmentShaderSource, GL_FRAGMENT_SHADER);
 			prog->createShaderProgram(shaderProgram,prog->vertexShader, prog->fragmentShader);
 
 			/* Initializing view, model and projection matrices. */ 
@@ -50,12 +49,16 @@ int main(int argc, char *argv[])
 
 			glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 
+			glUseProgram(shaderProgram);
+			prog->setMat4(shaderProgram, "projection", projection);
+
 			Camera *cam = new Camera();
 
 			GLuint VAO, VBO;
 
 			Cube *cube = new Cube(VAO, VBO);
 
+			
 			/* This is the main rendering loop. */
 			char cont = 1;
 			while(cont!=0)
@@ -82,14 +85,25 @@ int main(int argc, char *argv[])
 					/* 	our vertex shader. */
 					cam->processInput(event);
 					view = glm::lookAt(cam->cameraPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+					/* std::cout << glm::to_string(view) << std::endl; */
 					std::cout << glm::to_string(cam->cameraPos) << std::endl;
-					cube->render(shaderProgram, VAO);
-					prog->setMat4(shaderProgram, "projection", projection);
+
+					/* Must render (glUseProgram & glBindVertexArray) before modifying the uniform values. */
+					/* cube->render(shaderProgram, VAO); */
+					glDrawArrays(GL_TRIANGLES, 0, 36);
+
 					prog->setMat4(shaderProgram, "view", view);
 					prog->setMat4(shaderProgram, "model", model);
+					glBindVertexArray(VAO);
 
 					GLint viewLocation = glGetUniformLocation(shaderProgram, "view");
 					std::cout << "view location returns : " << viewLocation << std::endl;
+
+					GLint modelLocation = glGetUniformLocation(shaderProgram, "model");
+					std::cout << "model location returns : " << modelLocation << std::endl;
+
+					GLint projectionLocation = glGetUniformLocation(shaderProgram, "projection");
+					std::cout << "projection location returns : " << projectionLocation << std::endl;
 
 					glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 					/* glClear(GL_COLOR_BUFFER_BIT); */

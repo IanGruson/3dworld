@@ -14,7 +14,7 @@ void Program::compileShader(GLuint shader, const char* shaderSource, GLenum shad
 	shader = glCreateShader(shaderType);
 	glShaderSource(shader, 1, &shaderSource, NULL);
 	glCompileShader(shader);
-	this->checkCompileErrors(shader, shaderType);
+	checkCompileErrors(shader, shaderType);
 }
 
 /**
@@ -90,8 +90,7 @@ void Program::checkCompileErrors(GLuint shader, GLenum shaderType)
 
 }
 
-void Program::setMat4(GLuint shader, const std::string &name, const glm::mat4 &mat) 
+void Program::setMat4(GLuint shaderProgram, const std::string &name, const glm::mat4 &mat) 
 {
-	GLuint ID;
-	glUniformMatrix2fv(glGetUniformLocation(shader, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+	glUniformMatrix2fv(glGetUniformLocation(shaderProgram, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }

@@ -9,6 +9,7 @@
 #include <glm/ext.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <math.h>
+#include <assert.h>     /* assert */
 #include "Renderer.h"
 #include "Shapes/Cube.h"
 #define SCREEN_WIDTH 1280
@@ -48,17 +49,32 @@ int main(int argc, char *argv[])
 			model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); 
 
 			glm::mat4 view = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-
-			glUseProgram(shaderProgram);
-			prog->setMat4(shaderProgram, "projection", projection);
-
 			Camera *cam = new Camera();
 
 			GLuint VAO, VBO;
 
 			Cube *cube = new Cube(VAO, VBO);
+			glBindVertexArray(VAO);
 
+			glUseProgram(shaderProgram);
 			
+			GLint infoLogLength;
+			int projectionLocation = glGetUniformLocation(shaderProgram, "u_projection");
+			if(projectionLocation == -1) {
+
+				glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLogLength);
+				// Get the info log
+				std::cout << "uniform location returned -1 for u_projection" << std::endl;
+				GLchar* infoLog = new GLchar[infoLogLength];
+				glGetProgramInfoLog(shaderProgram, infoLogLength, NULL, infoLog);
+				std::cout << "infoLog is : " << infoLog << std::endl;
+				exit(1);
+			}
+
+			else {
+			prog->setMat4(shaderProgram, "u_projection", projection);
+			}
+
 			/* This is the main rendering loop. */
 			char cont = 1;
 			while(cont!=0)
@@ -88,22 +104,24 @@ int main(int argc, char *argv[])
 					/* std::cout << glm::to_string(view) << std::endl; */
 					std::cout << glm::to_string(cam->cameraPos) << std::endl;
 
-					/* Must render (glUseProgram & glBindVertexArray) before modifying the uniform values. */
-					/* cube->render(shaderProgram, VAO); */
-					glDrawArrays(GL_TRIANGLES, 0, 36);
+					/* Must bind program using glUseProgram & also
+					 * glBindVertexArray before modifying the uniform values.
+					 * */
 
-					prog->setMat4(shaderProgram, "view", view);
-					prog->setMat4(shaderProgram, "model", model);
-					glBindVertexArray(VAO);
+					/* glBindVertexArray(VAO); */
+					prog->setMat4(shaderProgram, "u_view", view);
+					prog->setMat4(shaderProgram, "u_model", model);
 
-					GLint viewLocation = glGetUniformLocation(shaderProgram, "view");
+					GLint viewLocation = glGetUniformLocation(shaderProgram, "u_view");
 					std::cout << "view location returns : " << viewLocation << std::endl;
 
-					GLint modelLocation = glGetUniformLocation(shaderProgram, "model");
+					GLint modelLocation = glGetUniformLocation(shaderProgram, "u_model");
 					std::cout << "model location returns : " << modelLocation << std::endl;
 
-					GLint projectionLocation = glGetUniformLocation(shaderProgram, "projection");
+					GLint projectionLocation = glGetUniformLocation(shaderProgram, "u_projection");
 					std::cout << "projection location returns : " << projectionLocation << std::endl;
+
+					glDrawArrays(GL_TRIANGLES, 0, 36);
 
 					glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 					/* glClear(GL_COLOR_BUFFER_BIT); */

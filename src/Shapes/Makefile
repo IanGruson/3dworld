@@ -5,7 +5,6 @@ HFILES = $(wildcard *.h)
 OBJFILES = Cube.o 
 TARGET = shape
 
-
 $(OBJFILES) : $(SRCFILES) $(HFILES)
 	$(CC) -c $(SRCFILES)
 
